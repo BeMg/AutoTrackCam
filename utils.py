@@ -21,7 +21,7 @@ def draw(img, rects, color):
 def face_cascade():
     cascade_xml = []
 
-    cascade_xml.append('./data/haarcascades/haarcascade_frontalface_alt2.xml')
+    cascade_xml.append('./haarcascades/haarcascade_frontalface_alt2.xml')
 
     cascades = []
 
@@ -33,5 +33,5 @@ def face_cascade():
 def DetectFace(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     cascades = face_cascade()
-    rects = detect(gray, cascades[0])
+    rects = detect(img, cascades[0])
     return rects
