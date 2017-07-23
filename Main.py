@@ -2,6 +2,7 @@ import cv2
 from GetVideoFromCam import GetVideoFromCam
 from utils import draw, DetectFace
 from DetectBody import DetectBody
+from DetectPeople import DetectPeople
 import imutils
  
 
@@ -10,7 +11,7 @@ cap = GetVideoFromCam(0)
 while True:
     flag, frame = cap.read()
 
-    rects = DetectFace(frame)
+    rects = DetectPeople(frame)
 
     if len(rects) > 0:
         draw(frame, rects, (255, 0, 0))
