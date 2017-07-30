@@ -3,7 +3,6 @@ from GetVideoFromCam import GetVideoFromCam
 from utils import draw
 from DetectPeople import DetectPeople
 from DetectScreen import DetectScreen
-import imutils
  
 
 cap = GetVideoFromCam(0)
