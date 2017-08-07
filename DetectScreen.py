@@ -64,7 +64,7 @@ def screenState(left, right, length, height):
     return [stateBoundary, stateVisible]
 
 
-def DetectScreen(frame)
+def DetectScreen(frame):
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.medianBlur(gray, 21)
