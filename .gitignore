@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# svm_model
+
+/svm_model/*
