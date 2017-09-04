@@ -27,11 +27,10 @@ while True:
         # Wait to work
         # People_rects = kfilter(frame)
 
-    Screen_rects = DetectScreen(frame)
-
+    #Screen_rects = DetectScreen(frame)
     if len(rects) > 0:
         draw(frame, People_rects, (255, 0, 0))
-    
+
     cv2.imshow('GGG', frame)
     if cv2.waitKey(5) == 27:
         cap.release()

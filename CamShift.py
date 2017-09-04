@@ -3,28 +3,18 @@ import numpy as np
 
 termCrit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
 
-def setWindow(img, rects):
+def setWindowSize(rect):
+    width = rect[0][2] - rect[0][0]
+    length = rect[0][3] - rect[0][1]
+
+    return width, length
+
+def setWindow(img, rect):
     
-    """
-        Initial tracking window for camshift,
-        depending on argument rects and Historgram of ROI
-
-        Args:
-            img: Current frame
-            rects: Coordinate of the tracking setWindow
-        
-        Return:
-            window: (Tuple) Coordinate of the tracking setWindow
-            roiHist: Historgram of ROI
-
-    """
-
-    # col, row, width, length = rects[0]
-    # window = (col, row, width, length)
-    x1, y1, x2, y2 = rects[0]
-    window = (x1, y1, x2 - x1, y2 - y1)
-    
-    roi = img[y1 : y2, x1 : x2]
+    col, row, width, length = rect[0]
+    cv2.imwrite('init.png', img[row: length, col: width])
+    window = (col, row, width, length)
+    roi = img[row : length, col : width]
     hsvRoi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsvRoi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
     roiHist = cv2.calcHist([hsvRoi],[0],mask,[180],[0,180])
@@ -32,31 +22,34 @@ def setWindow(img, rects):
 
     return window, roiHist
 
+
 def camShift(img, window, roiHist):
     
-    """
-        Operates camshift
-
-        Args:
-            img: Current frame
-            window: tracking window returned by setWindow()
-            roiHist: Historgram of ROI returned by setWindow()
-            
-        Return:
-            center: center of the mass of the object
-            pts: Polygon by camshift()
-
-    """
-    
+    #window, roiHist = setWindow(img, rect)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     dst = cv2.calcBackProject([hsv], [0], roiHist, [0, 180], 1)
 
     rect, window = cv2.CamShift(dst, window, termCrit)
-    
+    #print(window)
     pts = cv2.boxPoints(rect)
     pts = np.int0(pts)
-    
+    #print(pts)
+    #img2 = cv2.polylines(img,[pts],True, 255,2)
     center = np.mean(pts, axis = 0)
     center = np.int0(center)
     
-    return center, pts
+    return window, center, pts
+
+def getForeground(img, rect):
+
+    mask = np.zeros(img.shape[:2],np.uint8)
+
+    bgdModel = np.zeros((1,65),np.float64)
+    fgdModel = np.zeros((1,65),np.float64)
+
+    cv2.grabCut(img,mask,rect,bgdModel,fgdModel,3,cv2.GC_INIT_WITH_RECT)
+
+    mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
+    toReturn = img*mask2[:,:,np.newaxis]
+
+    return toReturn
