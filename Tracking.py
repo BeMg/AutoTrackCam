@@ -5,14 +5,16 @@ import CamShift as cs
 class objTracking(object):
     
     def __init__(self, rect):
-        self.rect = rect
+        self.rect = None
         self.window = None
         self.roiHist = None
         self.center = None
-        self.width, self.length = cs.setWindowSize(self.rect)
+        self.width = None
+        self.length = None
     
     def setWindow(img, rect):
         self.window, self.roiHist = cs.setWindow(img, rect)
+        self.width, self.length = cs.setWindowSize(rect)
     
     def getRect(img):
 
