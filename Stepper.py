@@ -7,15 +7,15 @@ from time import sleep
 import RPi.GPIO as GPIO
  
 class Motor:
-    def __init__(self, revs_per_minute):
+    def __init__(self, pins, revs_per_minute):
         for p in pins:
             GPIO.setup(p, GPIO.OUT)
             GPIO.output(p, 0)
 
-        self.P1 = 29
-        self.P2 = 31
-        self.P3 = 33
-        self.P4 = 35
+        self.P1 = pins[0]
+        self.P2 = pins[1]
+        self.P3 = pins[2]
+        self.P4 = pins[3]
 
         self.deg_per_step = 5.625 / 64
         self.steps_per_rev = int(360 / self.deg_per_step)  # 4096
@@ -97,4 +97,4 @@ class Motor:
             GPIO.output(self.P2, 0)
             sleep(self._T)
             GPIO.output(self.P4, 1)
-            sleep(self._T)
+            sleep(self._T) 

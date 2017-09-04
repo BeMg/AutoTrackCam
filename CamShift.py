@@ -4,8 +4,8 @@ import numpy as np
 termCrit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
 
 def setWindowSize(rect):
-    width = rect[0][2] - rect[0][0]
-    length = rect[0][3] - rect[0][1]
+    width = rect[0][3] - rect[0][1]
+    length = rect[0][2] - rect[0][0]
 
     return width, length
 
