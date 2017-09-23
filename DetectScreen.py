@@ -1,10 +1,8 @@
 import cv2
 import numpy as np
-from detectanddraw import draw
-from TurningWithDetect import Turn
 
 
-def calculateRect(contour, size):
+def calculateRect(contour):
 
     contour = contour[np.argsort(contour[:, 0])]
     contour = contour[np.argsort(contour[:, 1])]
@@ -26,7 +24,7 @@ def selectScreen(contours):
         curr = cv2.contourArea(contour)
         if curr > area:
             curr = area
-            result = contour
+            result = calculateRect(curr)
 
         return result
 
