@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
-from detectanddraw import draw
-from TurningWithDetect import Turn
+
 
 def PolygonArea(corners):
     #n = len(corners) # of corners
@@ -85,4 +84,4 @@ def DetectScreen(frame):
     result.append(coordRight[0])
     result.append(coordRight[1])
 
-    return result
+    return [result]
