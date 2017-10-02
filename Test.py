@@ -11,7 +11,7 @@ import paramiko
 #from Action import action
 
 
-hostname = '10.0.0.100'
+hostname = '192.168.8.7'
 port = 22
 username = 'pi'
 password = 'raspberry'
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     s.connect(hostname, port, username, password)
 
     # Creat a process for capturing frame
-    cap = GetVideoFromCam(0)
+    cap = GetVideoFromCam(1)
     #cap = cv2.VideoCapture('/home/hchusiang/AutoTrackCam/media/output.avi')
 
     # If reset, the whole system will start at detection
@@ -46,11 +46,12 @@ if __name__ == '__main__':
     while True:
         while reset is True:
             #Initialize object
+            track_container = None
             track_container = InitializeObj()
             #Read frame
             _flag, frame = cap.read()
             #Detect
-            People_rects = DetectPeople(frame)
+            People_rects = DetectUpperbody(frame)
             if len(People_rects) > 0:
                 track_container.setWindow(frame, People_rects)
                 reset = False
