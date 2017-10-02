@@ -5,8 +5,16 @@ from utils import draw
 from DetectPeople import DetectPeople
 from DetectScreen_old import DetectScreen
 import Tracking
+from sshTrun import action
+import paramiko
 #import Stepper
 #from Action import action
+
+
+hostname = '10.0.0.100'
+port = 22
+username = 'pi'
+password = 'raspberry'
 
 
 def capFrameProcess(cap, conn):
@@ -21,10 +29,15 @@ def InitializeObj():
 
 if __name__ == '__main__':
 
+    ## ssh connection
+    paramiko.util.log_to_file('paramiko.log')
+    s = paramiko.SSHClient()
+    s.load_system_host_keys()
+    s.connect(hostname, port, username, password)
 
     # Creat a process for capturing frame
-    #cap = GetVideoFromCam('/media/tt.mp4')
-    cap = cv2.VideoCapture('/home/hchusiang/AutoTrackCam/media/output.avi')
+    cap = GetVideoFromCam(0)
+    #cap = cv2.VideoCapture('/home/hchusiang/AutoTrackCam/media/output.avi')
 
     # If reset, the whole system will start at detection
     reset = True
@@ -46,7 +59,6 @@ if __name__ == '__main__':
 
         #Tracking Stage
         while cnt < 50:
-
             cnt = cnt + 1
             if cnt >= 50:
                 reset = True
@@ -58,6 +70,7 @@ if __name__ == '__main__':
             Screen_rects = DetectScreen(frame)
             draw(frame, People_rects, (255, 0, 0))
             draw(frame, Screen_rects, (0, 255, 0))
+            action(frame, People_rects, s)
             cv2.imshow('Frame', frame)
             if cv2.waitKey(5) == 27:
                 cap.release()
