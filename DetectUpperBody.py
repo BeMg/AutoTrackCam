@@ -15,6 +15,7 @@ hog = cv2.HOGDescriptor((W, H), (16, 16), (8,8), (8,8), 9)
 
 
 def DetectUpperBody(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     rect = DetectMymethod2(gray, H, W, 3.5, 30,  clf)
     
     return rect
