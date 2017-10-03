@@ -3,6 +3,7 @@ import multiprocessing as mp
 from GetVideoFromCam import GetVideoFromCam
 from utils import draw
 from DetectPeople import DetectPeople
+#from DetectUpperBody import DetectUpperBody
 from DetectScreen_old import DetectScreen
 import Tracking
 from sshTrun import action
@@ -51,7 +52,7 @@ if __name__ == '__main__':
             #Read frame
             _flag, frame = cap.read()
             #Detect
-            People_rects = DetectUpperbody(frame)
+            People_rects = DetectPeople(frame)
             if len(People_rects) > 0:
                 track_container.setWindow(frame, People_rects)
                 reset = False
