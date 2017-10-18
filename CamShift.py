@@ -13,7 +13,7 @@ def setWindow(img, rect):
     
     col, row, width, length = rect[0]
     cv2.imwrite('init.png', img[row: length, col: width])
-    window = (col, row, width, length)
+    window = (col, row, width - col, length - row)
     roi = img[row : length, col : width]
     hsvRoi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsvRoi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
