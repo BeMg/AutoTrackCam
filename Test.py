@@ -1,9 +1,9 @@
 import cv2
 import multiprocessing as mp
 from GetVideoFromCam import GetVideoFromCam
-from utils import draw
+from utils import draw, draw2
 from DetectPeople import DetectPeople
-#from DetectUpperBody import DetectUpperBody
+from DetectUpperBody import DetectUpperBody
 from DetectScreen_old import DetectScreen
 import Tracking
 from sshTrun import action
@@ -12,7 +12,7 @@ import paramiko
 #from Action import action
 
 
-hostname = '192.168.8.7'
+hostname = '192.168.43.29'
 port = 22
 username = 'pi'
 password = 'raspberry'
@@ -40,6 +40,9 @@ if __name__ == '__main__':
     cap = GetVideoFromCam(1)
     #cap = cv2.VideoCapture('/home/hchusiang/AutoTrackCam/media/output.avi')
 
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
+
     # If reset, the whole system will start at detection
     reset = True
     cnt = 0
@@ -53,6 +56,8 @@ if __name__ == '__main__':
             _flag, frame = cap.read()
             #Detect
             People_rects = DetectPeople(frame)
+            
+            print(People_rects)
             if len(People_rects) > 0:
                 track_container.setWindow(frame, People_rects)
                 reset = False
@@ -60,19 +65,20 @@ if __name__ == '__main__':
                 cv2.imshow('Frame', frame)
 
         #Tracking Stage
-        while cnt < 50:
+        while cnt < 100:
             cnt = cnt + 1
-            if cnt >= 50:
+            if cnt >= 100:
                 reset = True
                 cnt = 0
-                print("Reset")
+                break
 
             _flag, frame = cap.read()
             People_rects = track_container.getRect(frame)
-            Screen_rects = DetectScreen(frame)
+            # Screen_rects = DetectScreen(frame)
             draw(frame, People_rects, (255, 0, 0))
-            draw(frame, Screen_rects, (0, 255, 0))
+            # draw(frame, Screen_rects, (0, 255, 0))
             action(frame, People_rects, s)
+            out.write(frame)
             cv2.imshow('Frame', frame)
             if cv2.waitKey(5) == 27:
                 cap.release()

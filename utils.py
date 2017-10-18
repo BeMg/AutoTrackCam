@@ -92,6 +92,8 @@ def DetectMymethod(img, H, W, clf):
             if val == 1:
                 rects.append(sw[j])
     
+    rects = [(y1, x1, y2, x2) for (x1, y1, x2, y2) in rects]
+
     return rects
 
 def DetectMymethod2(img, H, W, Scale, padding, clf):
@@ -116,5 +118,7 @@ def DetectMymethod2(img, H, W, Scale, padding, clf):
     for j, val in enumerate(pred):
             if val == 1:
                 rects.append(sw[j])
+
+    rects = [(y1, x1, y2, x2) for (x1, y1, x2, y2) in rects]
 
     return rects
