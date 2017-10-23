@@ -18,12 +18,16 @@ def action(img, rect):
         print("Here")
         #motor.move_to(0)
         motor.move_to(-5) #counterclockwise
-        time.sleep(0.1)
+        time.sleep(0.15)
+        return True
+        GPIO.cleanup()
     
     if center > bonduary[1]:
         print("Here2")
         #motor.move_to(0)
         motor.move_to(5) #clockwise
-        time.sleep(0.1)
+        time.sleep(0.15)
+        return True
+        GPIO.cleanup()
 
     GPIO.cleanup()

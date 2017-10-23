@@ -8,6 +8,7 @@ from DetectScreen_old import DetectScreen
 import Tracking
 from sshTrun import action
 import paramiko
+import time
 #import Stepper
 #from Action import action
 
@@ -30,6 +31,7 @@ def InitializeObj():
 
 if __name__ == '__main__':
 
+    time.sleep(5)
     ## ssh connection
     paramiko.util.log_to_file('paramiko.log')
     s = paramiko.SSHClient()
@@ -46,6 +48,7 @@ if __name__ == '__main__':
     # If reset, the whole system will start at detection
     reset = True
     cnt = 0
+    color = None
     track_container = InitializeObj()
     while True:
         while reset is True:
@@ -56,18 +59,26 @@ if __name__ == '__main__':
             _flag, frame = cap.read()
             #Detect
             People_rects = DetectPeople(frame)
-            
-            print(People_rects)
+            UpperBody_rects = DetectUpperBody(frame)
             if len(People_rects) > 0:
                 track_container.setWindow(frame, People_rects)
+                color = (255, 0, 0)
+                reset = False
+            elif len(UpperBody_rects) > 0:
+                col, row, width, length = UpperBody_rects[0]
+                People_rects = UpperBody_rects
+                track_container.setWindow(frame, People_rects)
+                color = (0, 255, 0)
                 reset = False
             else:
                 cv2.imshow('Frame', frame)
+                out.write(frame)
+                continue
 
         #Tracking Stage
-        while cnt < 100:
+        while cnt < 30:
             cnt = cnt + 1
-            if cnt >= 100:
+            if cnt >= 30:
                 reset = True
                 cnt = 0
                 break
@@ -75,9 +86,10 @@ if __name__ == '__main__':
             _flag, frame = cap.read()
             People_rects = track_container.getRect(frame)
             # Screen_rects = DetectScreen(frame)
-            draw(frame, People_rects, (255, 0, 0))
+            draw(frame, People_rects, color)
             # draw(frame, Screen_rects, (0, 255, 0))
-            action(frame, People_rects, s)
+            if action(frame, People_rects, s) is True:
+                reset = True
             out.write(frame)
             cv2.imshow('Frame', frame)
             if cv2.waitKey(5) == 27:
