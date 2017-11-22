@@ -18,7 +18,7 @@ def action(img, rect):
         print("Here")
         #motor.move_to(0)
         motor.move_to(-5) #counterclockwise
-        time.sleep(0.15)
+        time.sleep(0.2)
         return True
         GPIO.cleanup()
     
@@ -26,8 +26,15 @@ def action(img, rect):
         print("Here2")
         #motor.move_to(0)
         motor.move_to(5) #clockwise
-        time.sleep(0.15)
+        time.sleep(0.2)
         return True
         GPIO.cleanup()
 
+    GPIO.cleanup()
+
+def reset(steps):
+
+    GPIO.setmode(GPIO.BOARD)
+    motor = Stepper.Motor((29, 31, 33, 35), 15)
+    motor.move_to(int(steps * 5))
     GPIO.cleanup()

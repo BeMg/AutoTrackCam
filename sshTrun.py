@@ -8,7 +8,7 @@ password = 'raspberry'
 
 
 
-def action(img, rect, s):
+def action(img, rect, s, steps):
     height, weight, _ignore = img.shape
     print(rect[0][0], rect[0][2])
     bonduary = (weight * 0.2, weight * 0.8)
@@ -18,9 +18,14 @@ def action(img, rect, s):
 
     if center < bonduary[0]:
         stdin, stdout, stderr = s.exec_command('python3 /home/pi/AutoTrackCam/remoteTurn.py 29 31 33 35 -5')
-        return True
+        return True, (steps - 1)
     if center > bonduary[1]:
         stdin, stdout, stderr = s.exec_command('python3 /home/pi/AutoTrackCam/remoteTurn.py 29 31 33 35 5')
-        return True
+        return True, (steps + 1)
 
     return False
+
+def resetAction(steps, s):
+    command = 'python3 /home/pi/AutoTrackCam/remoteTurn.py 29 31 33 35 ' + str(int (steps * 5))
+    return
+    

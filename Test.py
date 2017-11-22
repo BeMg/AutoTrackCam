@@ -68,6 +68,7 @@ if __name__ == '__main__':
                 col, row, width, length = UpperBody_rects[0]
                 People_rects = UpperBody_rects
                 track_container.setWindow(frame, People_rects)
+                cv2.imwrite('upper.png', frame)
                 color = (0, 255, 0)
                 reset = False
             else:
@@ -85,11 +86,12 @@ if __name__ == '__main__':
 
             _flag, frame = cap.read()
             People_rects = track_container.getRect(frame)
-            # Screen_rects = DetectScreen(frame)
+            Screen_rects = DetectScreen(frame)
             draw(frame, People_rects, color)
-            # draw(frame, Screen_rects, (0, 255, 0))
+            draw(frame, Screen_rects, (0, 0, 255))
             if action(frame, People_rects, s) is True:
                 reset = True
+                break
             out.write(frame)
             cv2.imshow('Frame', frame)
             if cv2.waitKey(5) == 27:
